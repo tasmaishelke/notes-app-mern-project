@@ -40,4 +40,4 @@ noteSchema.plugin(Autoincrement,
     }
 )
 
-module.exports = mongoose.Model('Note', noteSchema)
+module.exports = mongoose.model('Note', noteSchema)

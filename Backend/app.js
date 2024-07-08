@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const rootRouter = require('./routes/root')
+const userRoutes = require('./routes/userRoutes')
 const connectDB = require('./config/dbConnect')
 const { logger } = require('./middlewares/logger')
 const  errorHandler  = require('./middlewares/errorHandler')
@@ -25,6 +26,7 @@ app.use('/', express.static(path.join(__dirname, 'Public')))
 
 //routes
 app.use('/', rootRouter)
+app.use('/users', userRoutes)
 
 app.all('*', (req, res) =>
     {
