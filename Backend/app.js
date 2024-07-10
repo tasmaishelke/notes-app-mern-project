@@ -2,11 +2,15 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const path = require('path')
+
 const rootRouter = require('./routes/root')
 const userRoutes = require('./routes/userRoutes')
+const noteRoutes = require('./routes/noteRoutes')
 const connectDB = require('./config/dbConnect')
+
 const { logger } = require('./middlewares/logger')
 const  errorHandler  = require('./middlewares/errorHandler')
+
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const corsOption = require('./config/corsOptions' )
@@ -23,10 +27,10 @@ app.use(cookieParser())
 
 app.use('/', express.static(path.join(__dirname, 'Public')))
 
-
 //routes
 app.use('/', rootRouter)
 app.use('/users', userRoutes)
+app.use('/notes', noteRoutes)
 
 app.all('*', (req, res) =>
     {

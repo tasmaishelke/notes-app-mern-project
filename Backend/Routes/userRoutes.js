@@ -8,5 +8,4 @@ router.route('/')
     .patch(userControllers.updateUser)
     .delete(userControllers.deleteUser)
 
-
 module.exports = router 

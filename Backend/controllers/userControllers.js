@@ -12,7 +12,7 @@ const asyncHandler = require('express-async-handler')
 const getAllUsers = asyncHandler(async (req, res) =>
     {
         const user = await User.find().select('-password').lean()
-        if(!user)
+        if(!user?.length)
         {
             return res.status(400).json({ Message : 'No users found'})
         }
@@ -65,14 +65,13 @@ const updateUser = asyncHandler(async (req, res) =>
         {
             return res.status(400).json({ Message : "User not found"})
         }
-
         const duplicate = await User.findOne({ username }).lean().exec()
+
         if(duplicate && duplicate?._id.toString() !== id)
         {
             return res.status(409).json({ Message : "Duplicate username"})
         }
-
-        user.name = username
+        user.username = username
         user.roles = roles
         user.active = active
 
@@ -81,8 +80,8 @@ const updateUser = asyncHandler(async (req, res) =>
             user.password = await bcrypt.hash(password, 10)
         }
 
-        const updatedUser = await User.save()
-        res.json({Message : `${updatedUser.username} updated`})
+        const updatedUser = await user.save()
+        res.status(200).json({Message : `${updatedUser.username} updated`})
     })
 
 //delete a user
@@ -97,8 +96,8 @@ const deleteUser = asyncHandler(async (req, res) =>
             return res.status(400).json({Message : "User id is required"})
         }
 
-        const notes = await Note.findOne({ user: id}).lean().exec()
-        if (notes?.length)
+        const note = await Note.findOne({ user: id}).lean().exec()
+        if (note?.length)
         {
             return res.status(400).json({Message : "User has notes assigned"})
         }
@@ -107,11 +106,8 @@ const deleteUser = asyncHandler(async (req, res) =>
         {
             return res.status(400).json({Message : "user not found"})
         }
-
-        const result = await User.deleteOne()
-
-        const reply = `Username ${result.username} with ID ${result._id} deleted`
-        res.json(reply)
+        await user.deleteOne()
+        res.status(200).json({Message : `Username ${user.username} with ID ${user._id} deleted` })
     })
 
 module.exports = 
