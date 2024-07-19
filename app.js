@@ -6,6 +6,7 @@ const path = require('path')
 const rootRouter = require('./routes/root')
 const userRoutes = require('./routes/userRoutes')
 const noteRoutes = require('./routes/noteRoutes')
+const authRoutes = require('./routes/authRoutes')
 const connectDB = require('./config/dbConnect')
 
 const { logger } = require('./middlewares/logger')
@@ -29,6 +30,7 @@ app.use('/', express.static(path.join(__dirname, 'Public')))
 
 //routes
 app.use('/', rootRouter)
+app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
 app.use('/notes', noteRoutes)
 
@@ -53,3 +55,6 @@ const start = async () =>
     }
 }
 start()
+
+
+//require('crypto').randomBytes(64).toString('hex')
